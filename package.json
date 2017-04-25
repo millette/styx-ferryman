@@ -1,0 +1,17 @@
+{
+  "name": "m1",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standard",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "got": "^6.7.1",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "standard": "^10.0.2"
+  }
+}
