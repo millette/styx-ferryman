@@ -1,9 +1,14 @@
 dependencies:
   bl@^1.2.0: 1.2.0
+  concat-stream@^1.6.0: 1.6.0
   got@^6.7.1: 6.7.1
   hyperquest@^2.1.2: 2.1.2
+  iconv@^2.2.3: 2.2.3
   lodash@^4.17.4: 4.17.4
+  mississippi@^1.3.0: 1.3.0
   normalize-url@^1.9.1: 1.9.1
+  p-map-series@^1.0.0: 1.0.0
+  promise-sequence@^0.2.3: 0.2.3
   standard@^10.0.2: 10.0.2
 packages:
   /acorn-jsx/3.0.1:
@@ -21,6 +26,7 @@ packages:
   /ansi-escapes/1.4.0: d3a8a83b319aa67793662b13e761c7911422306e
   /ansi-regex/2.1.1: c3b33ab5ee360d86e0e628f0468ae7ef27d654df
   /ansi-styles/2.2.1: b432dd3358b634cf75e1e4664368240533c1ddbe
+  /any-promise/1.3.0: abc6afeedcea52e809cdc0376aed3ce39635d17f
   /argparse/1.0.9:
     dependencies:
       sprintf-js: 1.0.3
@@ -93,6 +99,7 @@ packages:
     dependencies:
       capture-stack-trace: 1.0.0
     resolution: 06be7abef947a3f14a30fd610671d401bca8b7b6
+  /cyclist/0.2.2: 1b33792e11e914a2fd6d6ed6447464444e5fa640
   /d/1.0.0:
     dependencies:
       es5-ext: 0.10.15
@@ -146,6 +153,21 @@ packages:
       readable-stream: 1.1.14
     resolution: c614dcf67e2fb14995a91711e5a617e8a60a31db
   /duplexer3/0.1.4: ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2
+  /duplexify/3.5.0:
+    dependencies:
+      end-of-stream: 1.0.0
+      inherits: 2.0.3
+      readable-stream: 2.2.9
+      stream-shift: 1.0.0
+    resolution: 1aa773002e1578457e9d9d4a50b0ccaaebcbd604
+  /end-of-stream/1.0.0:
+    dependencies:
+      once: 1.3.3
+    resolution: d4596e702734a93e40e9af864319eabd99ff2f0e
+  /end-of-stream/1.4.0:
+    dependencies:
+      once: 1.4.0
+    resolution: 7a90d833efda6cfa6eac0f4949dbb0fad3a63206
   /error-ex/1.3.1:
     dependencies:
       is-arrayish: 0.2.1
@@ -345,7 +367,17 @@ packages:
       graceful-fs: 4.1.11
       write: 0.2.1
     resolution: fa86714e72c21db88601761ecf2f555d1abc6b96
+  /flush-write-stream/1.0.2:
+    dependencies:
+      inherits: 2.0.3
+      readable-stream: 2.2.9
+    resolution: c81b90d8746766f1a609a46809946c45dd8ae417
   /foreach/2.0.5: 0bee005018aeb260d0a3af3ae658dd0136ec1b99
+  /from2/2.3.0:
+    dependencies:
+      inherits: 2.0.3
+      readable-stream: 2.2.9
+    resolution: 8bfb5502bde4a4d36cfdeea007fcca21d7e382af
   /fs.realpath/1.0.0: 1504ad2523158caa40db4a2787cb01411994ea4f
   /function-bind/1.1.0: 16176714c801798e4e8f2cf7f7529467bb4a5771
   /generate-function/2.0.0: 6858fe7c0969b7d4e9093337647ac79f60dfbe74
@@ -408,6 +440,10 @@ packages:
       duplexer2: 0.0.2
       through2: 0.6.5
     resolution: 95dbf6fcc74c749bae55cc39321335ddd6adc158
+  /iconv/2.2.3:
+    dependencies:
+      nan: 2.6.2
+    resolution: e084d60eeb7d73da7f0a9c096e4c8abe090bfaed
   /ignore/3.2.7: 4810ca5f1d8eca5595213a34b94f2eb4ed926bbd
   /imurmurhash/0.1.4: 9218b9b2b928a238b13dc4fb6b6d576f231453ea
   /inflight/1.0.6:
@@ -531,6 +567,19 @@ packages:
     resolution: 2a4e4090b96b2db06a9d7df01055a62a77c9b774
   /minimist/0.0.8: 857fcabfc3397d2625b8228262e86aa7a011b05d
   /minimist/1.2.0: a35008b20f41383eec1fb914f4cd5df79a264284
+  /mississippi/1.3.0:
+    dependencies:
+      concat-stream: 1.6.0
+      duplexify: 3.5.0
+      end-of-stream: 1.4.0
+      flush-write-stream: 1.0.2
+      from2: 2.3.0
+      parallel-transform: 1.1.0
+      pump: 1.0.2
+      pumpify: 1.3.5
+      stream-each: 1.2.0
+      through2: 2.0.3
+    resolution: d201583eb12327e3c5c1642a404a9cacf94e34f5
   /mkdirp/0.5.1:
     dependencies:
       minimist: 0.0.8
@@ -538,6 +587,7 @@ packages:
   /ms/0.7.1: 9cd13c03adbff25b65effde7ce864ee952017098
   /ms/0.7.3: 708155a5e44e33f5fd0fc53e81d0d40a91be1fff
   /mute-stream/0.0.5: 8fbfabb0a98a253d3184331f9e8deb7372fac6c0
+  /nan/2.6.2: e4ff34e6c95fdfb5aecc08de6596f43605a7db45
   /natural-compare/1.4.0: 4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7
   /normalize-url/1.9.1:
     dependencies:
@@ -555,6 +605,10 @@ packages:
       function-bind: 1.1.0
       object-keys: 1.0.11
     resolution: b1c9cc044ef1b9fe63606fc141abbb32e14730cc
+  /once/1.3.3:
+    dependencies:
+      wrappy: 1.0.2
+    resolution: b2e261557ce4c314ec8304f3fa82663e4297ca20
   /once/1.4.0:
     dependencies:
       wrappy: 1.0.2
@@ -575,6 +629,17 @@ packages:
     dependencies:
       p-limit: 1.1.0
     resolution: 20a0103b222a70c8fd39cc2e580680f3dde5ec43
+  /p-map-series/1.0.0:
+    dependencies:
+      p-reduce: 1.0.0
+    resolution: bf98fe575705658a9e1351befb85ae4c1f07bdca
+  /p-reduce/1.0.0: 18c2b0dd936a4690a529f8231f58a0fdb6a47dfa
+  /parallel-transform/1.1.0:
+    dependencies:
+      cyclist: 0.2.2
+      inherits: 2.0.3
+      readable-stream: 2.2.9
+    resolution: d410f065b05da23081fcd10f28854c29bda33b06
   /parse-json/2.2.0:
     dependencies:
       error-ex: 1.3.1
@@ -617,6 +682,21 @@ packages:
   /prepend-http/1.0.4: d4f4562b0ce3696e41ac52d0e002e57a635dc6dc
   /process-nextick-args/1.0.7: 150e20b756590ad3f91093f25a4f2ad8bff30ba3
   /progress/1.1.8: e260c78f6161cdd9b0e56cc3e0a85de17c7a57be
+  /promise-sequence/0.2.3:
+    dependencies:
+      any-promise: 1.3.0
+    resolution: c0299d2d70cbf59ce5875a2a276d5d369c688982
+  /pump/1.0.2:
+    dependencies:
+      end-of-stream: 1.4.0
+      once: 1.4.0
+    resolution: 3b3ee6512f94f0e575538c17995f9f16990a5d51
+  /pumpify/1.3.5:
+    dependencies:
+      duplexify: 3.5.0
+      inherits: 2.0.3
+      pump: 1.0.2
+    resolution: 1b671c619940abcaeac0ad0e3a3c164be760993b
   /query-string/4.3.4:
     dependencies:
       object-assign: 4.1.1
@@ -714,6 +794,12 @@ packages:
       eslint-plugin-standard: 3.0.1
       standard-engine: 7.0.0
     resolution: 974c1c53cc865b075a4b576e78441e1695daaf7b
+  /stream-each/1.2.0:
+    dependencies:
+      end-of-stream: 1.4.0
+      stream-shift: 1.0.0
+    resolution: 1e95d47573f580d814dc0ff8cd0f66f1ce53c991
+  /stream-shift/1.0.0: d5c752825e5367e786f78e18e445ea223a155952
   /strict-uri-encode/1.1.0: 279b225df1d582b1f54e65addd4352e18faa0713
   /string-width/1.0.2:
     dependencies:
@@ -754,6 +840,11 @@ packages:
       readable-stream: 1.0.34
       xtend: 4.0.1
     resolution: 41ab9c67b29d57209071410e1d7a7a968cd3ad48
+  /through2/2.0.3:
+    dependencies:
+      readable-stream: 2.2.9
+      xtend: 4.0.1
+    resolution: 0004569b37c7c74ba39c43f3ced78d1ad94140be
   /timed-out/4.0.1: f32eacac5a175bea25d7fab565ab3ed8741ef56f
   /to-string-tag-x/1.2.0:
     dependencies:
