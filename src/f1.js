@@ -13,7 +13,6 @@ const pMapSeries = require('p-map-series')
 const concat = require('concat-stream')
 const Iconv = require('iconv').Iconv
 const hyperquest = require('hyperquest')
-// const norm = require('normalize-url')
 const _ = require('lodash')
 
 const charsetRe = /; *charset=(.+)$/
@@ -21,12 +20,12 @@ const charsetRe = /; *charset=(.+)$/
 
 // const data = require('./qc-sites')
 
-let timingOut = 1.4
+let timingOut = 30
 
 const getUrl = (u) => new Promise((resolve, reject) => {
   const now = Date.now()
   let cncl
-  const timeout = 200 + (timingOut * 1700) // should take < 4min.
+  const timeout = timingOut * 1000
   const ret = {
     requestedUrl: u,
     timing: [['called', new Date(now).toISOString()]]
