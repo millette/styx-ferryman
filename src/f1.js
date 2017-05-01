@@ -24,7 +24,7 @@ let timingOut = 30
 
 const getUrl = (u) => new Promise((resolve, reject) => {
   const now = Date.now()
-  let cncl
+  // let cncl
   const timeout = timingOut * 1000
   const ret = {
     requestedUrl: u,
@@ -51,7 +51,7 @@ const getUrl = (u) => new Promise((resolve, reject) => {
   }
 
   const done = (err) => {
-    if (cncl) { clearTimeout(cncl) }
+    // if (cncl) { clearTimeout(cncl) }
     if (err) {
       timing(typeof err === 'string' ? err : 'error')
       ret.error = err
@@ -61,7 +61,7 @@ const getUrl = (u) => new Promise((resolve, reject) => {
     resolve(ret)
   }
 
-  cncl = setTimeout(done.bind(null, 'timeout'), timeout)
+  // cncl = setTimeout(done.bind(null, 'timeout'), timeout)
   hyperquest(u, {
     timeout,
     headers: {
