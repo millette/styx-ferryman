@@ -2,7 +2,7 @@
 
 const utils = require('.')
 const miss = require('mississippi')
-const hyperquest = require('hyperquest')
+// const hyperquest = require('hyperquest')
 
 const doX = (item, cb, x) => {
   x._id = item.id
@@ -26,6 +26,7 @@ const asDocs = miss.through((docs, enc, cb) => {
 })
 */
 
+/*
 const asDocs = miss.through.obj((docs, enc, cb) => {
   // const g = JSON.stringify({ docs })
   // console.log('asDocs...', g)
@@ -43,6 +44,7 @@ const asDocs = miss.through.obj((docs, enc, cb) => {
   }))
   hr.end(JSON.stringify({ docs }))
 })
+*/
 
 /*
 const asDocs = miss.through.obj((docs, enc, cb) => {
@@ -68,9 +70,11 @@ const toDb = miss.through.obj((docs, enc, cb) => {
 })
 */
 
+/*
 const out = miss.through.obj((batch, enc, cb) => {
   cb(null, JSON.stringify(batch))
 })
+*/
 
 miss.pipe(
   utils.f2(
@@ -78,7 +82,8 @@ miss.pipe(
     yo,
     8
   ),
-  asDocs,
+  utils.bulkPost,
+  // asDocs,
   // out,
   // toDb,
   process.stdout

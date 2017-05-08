@@ -15,4 +15,3 @@ module.exports = (u, task, per) => miss.pipe(
   parallel(per || 5, task || nop),
   tb(per || 5)
 )
-
