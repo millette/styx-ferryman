@@ -6,8 +6,6 @@ const miss = require('mississippi')
 const FeedParser = require('feedparser')
 const _ = require('lodash')
 
-const u = 'http://localhost:5993/u2/_design/feedsFirst/_view/feeds?reduce=false&include_docs=true&limit=1'
-
 const fromString = (string) => miss.from((size, next) => {
   // if there's no more content
   // left in the string, close the stream.
@@ -28,7 +26,22 @@ const out = miss.through.obj((docs, enc, cb) => {
 })
 
 const doX = (cb, x) => {
+  if (!x) {
+    return cb(null, {
+      feed: {
+        error: 'no-doc'
+      }
+    })
+  }
+
+  // console.error('doX', x)
+  x._id = x.requestedUrl
   x.feed = { createdAt: new Date().toISOString() }
+  if (!x.content) {
+    x.feed.error = 'no-content'
+    return cb(null, x)
+  }
+
   const fp = new FeedParser({
     feedurl: x.requestedUrl,
     addmeta: false
@@ -39,13 +52,21 @@ const doX = (cb, x) => {
     : (typeof v !== 'object' || v.toISOString || Object.keys(v).length)
 
   fromString(x.content).pipe(fp)
+    .on('error', (err) => {
+      // console.error('FEED ERROR', err)
+      x.feed.error = err.toString() || true
+      delete x.content
+      cb(null, x)
+    })
     .on('meta', (meta) => {
       x.feed.meta = _.pickBy(meta, picker)
+      delete x.content
       cb(null, x)
     })
 }
 
 const yo = (item, cb) => {
+  // console.error('yo', item)
   if (item.doc) { return cb(null, false) }
   return utils.f1.getUrl(item.value._id)
     .then(doX.bind(null, cb))
@@ -54,11 +75,11 @@ const yo = (item, cb) => {
 
 miss.pipe(
   utils.f2(
-    u,
+    'http://localhost:5993/u2/_design/feedsFirst/_view/feeds?reduce=false&include_docs=true',
     yo,
-    1
+    8
   ),
-  out,
-  // utils.bulkPost,
+  // out,
+  utils.bulkPost,
   process.stdout
 )

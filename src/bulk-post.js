@@ -10,6 +10,8 @@ module.exports = miss.through.obj((docs, enc, cb) => {
   // console.log('docs[0]', docs[0])
   // cb(null, { docs })
   docs = docs.filter(Boolean)
+
+  if (!docs.length) { return cb(null, 'no-docs\n') }
   const hr = hyperquest.post('http://localhost:5993/u2/_bulk_docs', {
     headers: {
       accept: 'application/json',
