@@ -1,5 +1,5 @@
 {
-  "name": "m1",
+  "name": "styx-ferryman",
   "version": "0.0.0",
   "main": "index.js",
   "scripts": {
