@@ -6,6 +6,15 @@
     "lint": "standard",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": [
+    "cli-ddocs.js",
+    "cli-feeds.js",
+    "cli-items.js",
+    "cli.js",
+    "cli-ms.js",
+    "cli-redir.js",
+    "cli-tags.js"
+  ],
   "license": "AGPL-3.0",
   "dependencies": {
     "JSONStream": "^1.3.1",
