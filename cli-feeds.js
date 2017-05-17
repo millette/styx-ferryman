@@ -20,10 +20,12 @@ const fromString = (string) => miss.from((size, next) => {
   next(null, chunk)
 })
 
+/*
 const out = miss.through.obj((docs, enc, cb) => {
   docs = docs.filter(Boolean)
   cb(null, JSON.stringify({ docs }))
 })
+*/
 
 const doX = (cb, x) => {
   if (!x) {

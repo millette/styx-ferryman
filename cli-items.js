@@ -21,11 +21,13 @@ const fromString = (string) => miss.from((size, next) => {
   next(null, chunk)
 })
 
+/*
 const out = miss.through.obj((docs, enc, cb) => {
   // console.log('DOCS:', docs[0].length)
   docs = docs[0].filter(Boolean)
   cb(null, JSON.stringify({ docs }))
 })
+*/
 
 const doX = (doc, cb, x) => {
   // console.log('DOC', doc)
@@ -79,9 +81,9 @@ const doX = (doc, cb, x) => {
       // delete x.content
       // cb(null, x)
     })
-    .on('readable', function() {
+    .on('readable', function () {
       let item
-      while (item = this.read()) {
+      while ((item = this.read())) {
         item._id = ['item', item.guid || item.link].join(':')
         item.source = x.requestedUrl
         item.fetchedAt = new Date().toISOString()

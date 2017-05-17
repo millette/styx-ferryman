@@ -17,7 +17,7 @@ const ss = (a, b) => {
 }
 
 hyperquest(u)
-  .on('data', (chunk) => str += chunk)
+  .on('data', (chunk) => { str += chunk })
   .on('end', () => {
     const rep = JSON.parse(str)
     const tags = rep.rows
