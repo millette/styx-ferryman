@@ -1,4 +1,6 @@
-'ust strict'
+#!/usr/bin/env node
+
+'use strict'
 
 // npm
 const hyperquest = require('hyperquest')
