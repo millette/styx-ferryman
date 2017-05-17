@@ -22,7 +22,7 @@ const charsetRe = /; *charset=(.+)$/
 
 let timingOut = 30
 
-const getUrl = (u) => new Promise((resolve, reject) => {
+const getUrl = (u, options) => new Promise((resolve, reject) => {
   const now = Date.now()
   // let cncl
   const timeout = timingOut * 1000
@@ -33,8 +33,12 @@ const getUrl = (u) => new Promise((resolve, reject) => {
   const timing = (label) => ret.timing.push([label, Date.now() - now])
   const onResponse = function (res) {
     timing('response')
+    // console.log(['YOYO', u, res.statusCode].join('*'))
     // if (cncl) { clearTimeout(cncl) }
     ret.res = _.pick(res, ['statusCode', 'statusMessage', 'headers'])
+
+    if (res.statusCode === 304) { ret.noChange = true }
+    // if (res.statusCode !== 200) { return }
     const cs = res.headers && res.headers['content-type'] && res.headers['content-type'].match(charsetRe)
     let s = this
     try {
@@ -61,13 +65,23 @@ const getUrl = (u) => new Promise((resolve, reject) => {
     resolve(ret)
   }
 
+  const headers = {
+    // also handle gzip!
+    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:52.0; burlesk) Gecko/20100101 Firefox/52.0'
+  }
+
+  if (!options) { options = {} }
+
+  if (options.etag) {
+    headers['if-none-match'] = options.etag
+  } else if (options.date) {
+    headers['if-modified-since'] = options.date
+  }
+
   // cncl = setTimeout(done.bind(null, 'timeout'), timeout)
   hyperquest(u, {
     timeout,
-    headers: {
-      // also handle gzip!
-      'user-agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:52.0; burlesk) Gecko/20100101 Firefox/52.0'
-    }
+    headers
   })
     .on('error', done)
     .on('request', timing.bind(null, 'request'))

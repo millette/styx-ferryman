@@ -84,6 +84,7 @@ const doX = (doc, cb, x) => {
       while (item = this.read()) {
         item._id = ['item', item.guid || item.link].join(':')
         item.source = x.requestedUrl
+        item.fetchedAt = new Date().toISOString()
         docs.push(_.pickBy(item, picker))
         // console.log('FEED ITEM', item)
       }
@@ -105,7 +106,18 @@ const doX = (doc, cb, x) => {
 
 const yo = (item, cb) => {
   // console.error('yo', item)
-  return utils.f1.getUrl(item.doc._id)
+  const options = {
+  }
+
+  if (item.doc && item.doc.res && item.doc.res.headers) {
+    if (item.doc.res.headers.etag) {
+      options.etag = item.doc.res.headers.etag
+    } else if (item.doc.res.headers['last-modified']) {
+      options.date = item.doc.res.headers['last-modified']
+    }
+  }
+
+  return utils.f1.getUrl(item.doc._id, options)
     .then(doX.bind(null, item.doc, cb))
     .catch(cb)
 }
@@ -128,7 +140,7 @@ miss.pipe(
   utils.f2(
     'http://localhost:5993/u2/_design/FeedsDates/_view/feeds?reduce=false&include_docs=true',
     yo,
-    8
+    15
   ),
   // out,
   utils.bulkPost,
