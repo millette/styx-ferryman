@@ -8,6 +8,7 @@
   },
   "bin": [
     "cli-ddocs.js",
+    "cli-sync.js",
     "cli-feeds.js",
     "cli-items.js",
     "cli.js",
@@ -19,6 +20,7 @@
   "dependencies": {
     "JSONStream": "^1.3.1",
     "concat-stream": "^1.6.0",
+    "dotenv-safe": "^4.0.4",
     "feedparser": "^2.2.0",
     "hyperquest": "^2.1.2",
     "iconv": "^2.2.3",
