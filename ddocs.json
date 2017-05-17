@@ -1,0 +1,227 @@
+[
+  {
+    "_id": "_design/FeedsDates",
+    "views": {
+      "feeds": {
+        "map": "function(doc) {\n  if (!doc.feed || doc.feed.error || !doc.feed.meta) { return }\n  if (doc.feed.meta.date) {\n    emit(doc.feed.meta.date.split('T')[0].split('-'))\n  } else {\n    emit('n/a')\n  }\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/FeedsOnly",
+    "views": {
+      "feeds": {
+        "map": "function(doc) {\n  if (!doc.feed) { return }\n  emit(!doc.feed.error, { title: doc.feed.meta.title, link: doc.feed.meta.link, pubdate: doc.feed.meta.pubdate });\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/FeedsOnlyBis",
+    "views": {
+      "feeds": {
+        "map": "function(doc) {\n  if (!doc.feed) { return }\n  emit(!doc.feed.error, doc.feed);\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/byCode",
+    "views": {
+      "byCode": {
+        "map": "function(doc) {\n  if (!doc.content) { return }\n  emit(doc.res.statusCode, doc.res);\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/categories",
+    "views": {
+      "categories": {
+        "map": "function(doc) {\n  if (!doc.date || !doc.categories || !doc.categories.length) { return }\n\n  doc.categories.forEach(function (cat) {\n    var x = doc.date.split('T')[0].split('-')\n    x.unshift(cat.toLowerCase())\n    emit(x, { date: doc.date, summary: doc.summary,  title: doc.title, url: doc.link } );\n  })\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/content",
+    "views": {
+      "content": {
+        "map": "function(doc) {\n  if (doc.metascraper || !doc.res || doc.res.statusCode !== 200 || !doc.content || !doc.content.length) { return }\n  emit(doc._rev, doc.content);\n}"
+      }
+    }
+  },
+  {
+    "_id": "_design/feedMeta",
+    "views": {
+      "languageAndGenerator": {
+        "map": "function(doc) {\n  if (!doc.feed || !doc.feed.meta) { return }\n\n  if (doc.feed.meta.generator) {\n    emit(['generator', doc.feed.meta.generator]);\n  }\n\n  if (doc.feed.meta.language) {\n    var lang = doc.feed.meta.language.toLowerCase().split('-')\n    lang.unshift('language')\n    emit(lang);\n  }\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/feeds",
+    "views": {
+      "feeds": {
+        "map": "function(doc) {\n  if (!doc.metascraper || !doc.metascraper.syndication) { return }\n  emit(doc.metascraper.syndication.length, doc.metascraper.syndication)\n}\n",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/feedsDocRel",
+    "views": {
+      "feeds": {
+        "map": "function(doc) {\n  if (!doc.metascraper || !doc.metascraper.syndication) { return }\n  var dirty = false\n  var synd = doc.metascraper.syndication.map(function (feed) {\n    if (!feed.indexOf('https://') || !feed.indexOf('http://')) { return feed }\n    dirty = true\n    if (!feed.indexOf('//')) { return 'http:' + feed }\n    return [doc.requestedUrl.replace(/\\/$/, ''), feed.replace(/^\\.\\//, '').replace(/^\\//, '')].join('/')\n  })\n  if (dirty) { emit(doc._rev, synd) }\n}\n",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/feedsFirst",
+    "views": {
+      "feeds": {
+        "map": "function(doc) {\n  if (!doc.metascraper || !doc.metascraper.syndication) { return }\n  var f1 = doc.metascraper.syndication[0]\n  var len = function (a, b) {\n    var al = a.length\n    var bl = b.length\n    if (al > bl) { return 1 }\n    if (al < bl) { return -1 }\n    return 0\n  }\n  var obj = { _id: f1 }\n  var f2 = doc.metascraper.syndication.slice().sort(len)[0]\n  if (f1 !== f2) { obj.short = f2 }\n  emit([f1 === f2, doc.metascraper.syndication.length], obj)\n}\n",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/feedsRel",
+    "views": {
+      "feeds": {
+        "map": "function(doc) {\n  if (!doc.metascraper || !doc.metascraper.syndication) { return }\n  doc.metascraper.syndication.forEach(function (feed) {\n    if (!feed.indexOf('https://') || !feed.indexOf('http://')) { return }\n    if (!feed.indexOf('//')) { return emit('http:' + feed) }\n    emit([doc.requestedUrl, feed.replace(/^\\.\\//, '').replace(/^\\//, '')].join('/'))\n  })\n}\n",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/feedsYo",
+    "views": {
+      "feeds": {
+        "map": "function(doc) {\n  if (!doc.metascraper || !doc.metascraper.syndication) { return }\n  doc.metascraper.syndication.forEach(function (feed) {\n    emit(feed)\n  })\n  // emit(doc.metascraper.syndication.length, doc.metascraper.syndication)\n}\n",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/g1",
+    "views": {
+      "g1": {
+        "map": "function(doc) {\n  if (!doc.res || !doc.res.statusCode || !doc.res.headers || !doc.res.headers.location) { return }\n  emit(doc.res.headers.location, doc.res.statusCode);\n}\n"
+      }
+    }
+  },
+  {
+    "_id": "_design/itemSources",
+    "views": {
+      "items": {
+        "map": "function(doc) {\n  if (doc._id.split(':')[0] !== 'item' || !doc.guid) { return }\n  var ret = doc.date.split('T')[0].split('-')\n  ret.unshift(doc.source)\n  emit(ret, doc._rev )\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/itemsDate",
+    "views": {
+      "items": {
+        "map": "function(doc) {\n  if (doc._id.split(':')[0] !== 'item') { return }\n  emit(doc.date.split('T')[0].split('-'))\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/itemsDateTitles",
+    "views": {
+      "items": {
+        "map": "function(doc) {\n  if (doc._id.split(':')[0] !== 'item') { return }\n  emit(doc.date.split('T')[0].split('-'), { title: doc.title, url: doc.link } )\n}",
+        "reduce": "_count"
+      }
+    },
+    "lists": {
+      "byDate": "function (head, req){\n  start({\n    'headers': {\n      'Content-Type': 'text/html; charset=\"utf-8\"'\n    }\n  });\n  send('<html><body>');\n  while(row = getRow()){\n    send(''.concat(\n      '<div>',\n      '<h2>' + (row.doc.title || '') + ' <small>' + row.doc.date + '</small></h2>',\n      '<p>' + (row.doc.summary || '') + '</p>',\n      row.doc.link,\n      '</div>'\n    ));\n  }\n  send('</body></html>');\n}"
+    }
+  },
+  {
+    "_id": "_design/itemsDateTitlesNoGUID",
+    "views": {
+      "items": {
+        "map": "function(doc) {\n  if (doc._id.split(':')[0] !== 'item' || doc.guid) { return }\n  emit(doc.date.split('T')[0].split('-'), { title: doc.title, url: doc.link } )\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/itemsDateTitlesWithGUID",
+    "views": {
+      "items": {
+        "map": "function(doc) {\n  if (doc._id.split(':')[0] !== 'item' || !doc.guid) { return }\n  emit(doc.date.split('T')[0].split('-'), { date: doc.date, summary: doc.summary,  title: doc.title, url: doc.link } )\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/itemsLink",
+    "views": {
+      "items": {
+        "map": "function(doc) {\n  if (doc._id.split(':')[0] !== 'item') { return }\n  emit(doc.link.split('/').slice(0, 3).join('/'))\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/metas",
+    "views": {
+      "metas": {
+        "map": "function(doc) {\n  if (!doc.metascraper) { return }\n  if (doc.metascraper.error) { return emit('error', doc.metascraper.error) }\n  var len = Object.keys(doc.metascraper).length\n  if (len) {\n    emit(['metas', Object.keys(doc.metascraper).length])\n  } else {\n    emit('no-meta')\n  }\n\n  //emit([Object.keys(doc.metascraper).length, typeof doc.metascraper.error], doc.metascraper);\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/redir",
+    "views": {
+      "redir": {
+        "map": "function(doc) {\n  if (!doc.res || !doc.res.statusCode || !doc.res.headers || !doc.res.headers.location) { return }\n  emit(doc.res.statusCode, doc.res.headers.location);\n}\n",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/redirIds",
+    "views": {
+      "redir": {
+        "map": "function(doc) {\n  if (!doc.res || !doc.res.statusCode || !doc.res.headers || !doc.res.headers.location) { return }\n  emit(doc.res.statusCode, { _id: doc.res.headers.location });\n}\n",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/timeout",
+    "views": {
+      "timeout": {
+        "map": "function(doc) {\n  if (doc.content || doc.res || !doc.error || doc.error !== 'timeout') { return }\n  emit(doc._rev);\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/wtf1",
+    "views": {
+      "bad": {
+        "map": "function(doc) {\n  if (doc.type && doc.data) {\n    emit(doc.type, doc._rev);\n  }\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/xtrack",
+    "views": {
+      "xtrack": {
+        "map": "function(doc) {\n  if (!doc.res || doc.res.statusCode !== 200) { return }\n  emit(doc.content.slice(0, 10), doc.content.length);\n}"
+      }
+    }
+  }
+]
