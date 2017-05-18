@@ -142,9 +142,9 @@ const yo3 = (item, cb) => {
 
 miss.pipe(
   utils.f2(
-    'http://localhost:5993/u2/_design/FeedsDates/_view/feeds?reduce=false&include_docs=true',
+    'http://localhost:5993/u2/_design/FeedsDatesV2/_view/feeds?reduce=false&include_docs=true',
     yo,
-    15
+    5
   ),
   // out,
   utils.bulkPost,
