@@ -1,9 +1,36 @@
 [
   {
+    "_id": "_design/FeedsAll",
+    "views": {
+      "feeds": {
+        "map": "function(doc) {\n  if (!doc.feed) { return }\n  emit(doc.feed.error, doc.feed)\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
     "_id": "_design/FeedsDates",
     "views": {
       "feeds": {
         "map": "function(doc) {\n  if (!doc.feed || doc.feed.error || !doc.feed.meta) { return }\n  if (doc.feed.meta.date) {\n    emit(doc.feed.meta.date.split('T')[0].split('-'))\n  } else {\n    emit('n/a')\n  }\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/FeedsDatesInfo",
+    "views": {
+      "feeds": {
+        "map": "function(doc) {\n  if (!doc.feed || doc.feed.error || !doc.feed.meta) { return }\n//  if (doc.feed.meta.date) {\n    var obj = {\n/*\n      title: doc.feed.meta.title,\n      description: doc.feed.meta.description,\n      link: doc.feed.meta.link,\n      date: doc.feed.meta.date,\n      language:  doc.feed.meta.language,\n      img: doc.feed.meta['rss:image'] && doc.feed.meta['rss:image'].url['#']\n*/\n    }\n    emit(doc.feed.meta.date && doc.feed.meta.date.split('T')[0].split('-'), obj)\n//  }\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/FeedsDatesV2",
+    "views": {
+      "feeds": {
+        "map": "function(doc) {\n  if (!doc.feed ) { return }\n  if (doc.feed.meta && doc.feed.meta.date) {\n    emit(doc.feed.meta.date.split('T')[0].split('-'))\n  } else {\n    emit('n/a')\n  }\n}",
         "reduce": "_count"
       }
     }
@@ -98,6 +125,24 @@
     }
   },
   {
+    "_id": "_design/feedsUsed",
+    "views": {
+      "feeds": {
+        "map": "function(doc) {\n  if (!doc.metascraper || !doc.metascraper.syndication) { return }\n  var f1 = doc.metascraper.syndication[0]\n  var len = function (a, b) {\n    var al = a.length\n    var bl = b.length\n    if (al > bl) { return 1 }\n    if (al < bl) { return -1 }\n    return 0\n  }\n  var f2 = doc.metascraper.syndication.slice().sort(len)[0]\n  if (f1 !== f2) { return }\n  emit(doc.metascraper.syndication.length, { _id: f1 })\n}\n",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/feedsUsedHmm",
+    "views": {
+      "feeds": {
+        "map": "function(doc) {\n  if (!doc.metascraper || !doc.metascraper.syndication) { return }\n  var f1 = doc.metascraper.syndication[0]\n  var len = function (a, b) {\n    var al = a.length\n    var bl = b.length\n    if (al > bl) { return 1 }\n    if (al < bl) { return -1 }\n    return 0\n  }\n  var f2 = doc.metascraper.syndication.slice().sort(len)[0]\n  if (f1 !== f2) { return }\n  emit(doc.metascraper.syndication.length, { _id: f1 })\n}\n",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
     "_id": "_design/feedsYo",
     "views": {
       "feeds": {
@@ -119,6 +164,15 @@
     "views": {
       "items": {
         "map": "function(doc) {\n  if (doc._id.split(':')[0] !== 'item' || !doc.guid) { return }\n  var ret = doc.date.split('T')[0].split('-')\n  ret.unshift(doc.source)\n  emit(ret, doc._rev )\n}",
+        "reduce": "_count"
+      }
+    }
+  },
+  {
+    "_id": "_design/itemSourcesYear",
+    "views": {
+      "items": {
+        "map": "function(doc) {\n  if (doc._id.split(':')[0] !== 'item' || !doc.guid) { return }\n  var ret = doc.date.split('T')[0].split('-').slice(0, 1)\n  ret.push(doc.source)\n  emit(ret, doc._rev )\n}",
         "reduce": "_count"
       }
     }
