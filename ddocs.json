@@ -30,7 +30,7 @@
     "_id": "_design/FeedsDatesV2",
     "views": {
       "feeds": {
-        "map": "function(doc) {\n  if (!doc.feed ) { return }\n  if (doc.feed.meta && doc.feed.meta.date) {\n    emit(doc.feed.meta.date.split('T')[0].split('-'))\n  } else {\n    emit('n/a')\n  }\n}",
+        "map": "function(doc) {\n  if (!doc.feed ) { return }\n  if (doc.feed.meta && doc.feed.meta.date) {\n    emit(doc.feed.meta.date.split('T')[0].split('-'), doc.feed)\n  } else {\n    emit('n/a', doc.feed)\n  }\n}",
         "reduce": "_count"
       }
     }
